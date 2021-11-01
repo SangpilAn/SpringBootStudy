@@ -23,6 +23,19 @@ public class BootApplicationTests {
     private BoardRepository repo;
 
     @Test
+    public void testInsert200(){
+
+        for (int i = 0; i <= 200 ; i++) {
+            Board board = new Board();
+            board.setTitle("제목.."+i);
+            board.setContent("내용 ...."+i+" 채우기 ");
+            board.setWriter("user0"+(i%10));
+            repo.save(board);
+        }
+
+    }
+
+    @Test
     public void findByTitle() {
 
         repo.findBoardByTitle("제목..177")
