@@ -1,6 +1,8 @@
 package com.sangpil.boot;
 
+import com.querydsl.core.BooleanBuilder;
 import com.sangpil.boot.domain.Board;
+import com.sangpil.boot.domain.QBoard;
 import com.sangpil.boot.persistance.BoardRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -117,6 +120,50 @@ public void testBnoOrderBy(){
     public void testByTitle2(){
 
         repo.findByTitle("17").forEach(board -> System.out.println(board));
+    }
+
+    @Test
+    public void testByTitle17(){
+        repo.findByTitle2("17").forEach(arr -> System.out.println(Arrays.toString(arr)));
+    }
+
+    @Test
+    public void testByPaging(){
+        Pageable pageable = PageRequest.of(0, 10);
+
+        repo.findByPage(pageable).forEach(board -> System.out.println(board));
+    }
+
+    @Test
+    public void testPredicate(){
+
+        String type = "t";
+        String keyword = "17";
+
+        BooleanBuilder builder = new BooleanBuilder();
+
+        QBoard board = QBoard.board;
+
+        if(type.equals("t")){
+            builder.and(board.title.like("%"+keyword+"%"));
+        }
+
+        //bno > 0
+        builder.and(board.bno.gt(0L));
+
+        Pageable pageable = PageRequest.of(0,10);
+
+        Page<Board> result = repo.findAll(builder,pageable);
+
+        System.out.println("PAGE SIZE: "+result.getSize());
+        System.out.println("TOTAL PAGES: "+result.getTotalPages());
+        System.out.println("TOTAL COUNT: "+result.getTotalElements());
+        System.out.println("NEXT: "+result.nextPageable());
+
+        List<Board> list = result.getContent();
+
+        list.forEach(b -> System.out.println(b));
+
     }
 
 }
