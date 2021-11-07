@@ -7,15 +7,20 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.transaction.Transactional;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Log
+@Commit
 public class PDSBoardRepositoryTest {
 
     @Autowired
@@ -39,6 +44,56 @@ public class PDSBoardRepositoryTest {
         repo.save(pds);
 
 
+    }
+
+    @Transactional
+    @Test
+    public void testUpdateFileName1(){
+        Long fno = 1L;
+        String newName = "updatedFile1.doc";
+
+        int count = repo.updatePDSFile(fno, newName);
+
+        log.info("update count: "+count);
+    }
+
+    @Transactional
+    @Test
+    public void testUpdaeFileName2(){
+        String newName = "updatedFile2.doc";
+
+        Optional<PDSBoard> result = repo.findById(1L);
+
+        result.ifPresent(pds -> {
+
+            log.info("데이터가 존재하므로 update 시도 ");
+
+            PDSFile target = new PDSFile();
+            target.setFno(2L);
+            target.setPdsfile(newName);
+
+            int idx = pds.getFiles().indexOf(target);
+
+            if(idx>-1){
+                List<PDSFile> list = pds.getFiles();
+                list.remove(idx);
+                list.add(target);
+                pds.setFiles(list);
+            }
+
+            repo.save(pds);
+
+        });
+    }
+
+    @Transactional
+    @Test
+    public void deletePDSFile(){
+        Long fno = 2L;
+
+        int count = repo.deletePDSFile(fno);
+
+        log.info("DELETE PDSFILE: "+count);
     }
 
 }
