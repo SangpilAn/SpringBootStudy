@@ -231,4 +231,19 @@ public class ArrayList<E> implements List<E>, Cloneable {
 
         return cloneList;
     }
+
+    public Object[] toArray(){
+        return Arrays.copyOf(array, size);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T[] toArray(T[] a){
+        if(a.length < size){
+            // copyOf(원본 배열, 복사할 길이, Class<? extends T[]> 타입)
+            return (T[]) Arrays.copyOf(array, size, a.getClass());
+        }
+        System.arraycopy(array, 0, a, 0, size);
+        return a;
+    }
+
 }
