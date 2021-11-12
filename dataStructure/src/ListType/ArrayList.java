@@ -4,7 +4,7 @@ import Interface_from.List;
 
 import java.util.Arrays;
 
-public class ArrayList<E> implements List<E> {
+public class ArrayList<E> implements List<E>, Cloneable {
 
     private static final int DEFAULT_CAPACITY = 10; // 최소(기본) 용적 크기
     private static final Object[] EMPTY_ARRAY = {}; // 빈 배열
@@ -34,13 +34,14 @@ public class ArrayList<E> implements List<E> {
         // 리스트의 용적 크기가 0 인 경우
         if(Arrays.equals(array, EMPTY_ARRAY)){
             array = new Object[DEFAULT_CAPACITY];
+            return;
         }
 
         // 리스트의 데이터 개수가 용적의 크기와 같은 경우
         if(size == array_capacity){
             int new_capacity = array_capacity * 2;
 
-            // 복사할 배열보다 용적의 크기가 클 경우 배열 복사 후 나머지 공간을 null로 채운 후 반환
+            // 복사할 배열보다 용적의 크기가 클 경우 배열 복사 후 나머지 공간을 null 로 채운 후 반환
             array = Arrays.copyOf(array, new_capacity);
         }
 
@@ -78,7 +79,7 @@ public class ArrayList<E> implements List<E> {
             throw new IndexOutOfBoundsException();
         }
 
-        // index가 마지막 위치일 경우 addList 메소드로 요소 추가
+        // index 가 마지막 위치일 경우 addList 메소드로 요소 추가
         if(index == size){
             addList(value);
         }else{
@@ -171,10 +172,9 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public int indexOf(Object value) {
-        int i = 0;
 
-        // value와 같은 객체일 경우 i(위치) qksghks
-        for (i = 0; i < size; i++) {
+        // value 와 같은 객체일 경우 i(위치) 반환
+        for (int i = 0; i < size; i++) {
             if(array[i].equals(value)){
                 return i;
             }
@@ -212,5 +212,23 @@ public class ArrayList<E> implements List<E> {
         }
         size = 0;
         resize();
+    }
+
+    @Override
+    public Object clone(){
+        // 새로운 객체 생성
+        ArrayList<?> cloneList = null;
+        try {
+            cloneList = (ArrayList<?>) super.clone();
+
+            // 새로운 객체의 배열 생성
+            cloneList.array = new Object[size];
+
+            System.arraycopy(array, 0, cloneList.array, 0, size);
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+
+        return cloneList;
     }
 }
