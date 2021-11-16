@@ -4,7 +4,7 @@ import Interface_from.List;
 
 import java.util.NoSuchElementException;
 
-public class SLinkedList<E> implements List<E> {
+public class SLinkedList<E> implements List<E>, Cloneable {
     
     private Node<E> head;   // 노드의 첫 부분
     private Node<E> tail;   // 노드의 마지막 부분
@@ -252,6 +252,52 @@ public class SLinkedList<E> implements List<E> {
             x = nextNode;
         }
         head = tail = null;
-        size == 0;
+        size = 0;
+    }
+
+
+    @Override
+    public Object clone(){
+
+        SLinkedList<? super E> clone = null;
+        try {
+            //noinspection unchecked
+            clone = (SLinkedList<? super E>) super.clone();
+
+            clone.head = null;
+            clone.tail = null;
+            clone.size = 0;
+
+            for (Node<E> x = head; x != null; x = x.next){
+                clone.addLast(x.data);
+            }
+
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+
+        return clone;
+    }
+
+    public Object[] toArray(){
+        Object[] array = new Object[size];
+        int idx = 0;
+        for(Node<E> x = head; x != null; x = x.next){
+            array[idx++] = (E) x.data;
+        }
+        return array;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T[] toArray(T[] a){
+        if(a.length < size){
+            a = (T[]) java.lang.reflect.Array.newInstance(a.getClass().getComponentType(), size);
+        }
+        int i = 0;
+        Object[] result = a;
+        for (Node<E> x = head; x != null; x = x.next){
+            result[i++] = x.data;
+        }
+        return a;
     }
 }
