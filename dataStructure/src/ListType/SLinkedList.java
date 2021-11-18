@@ -2,6 +2,8 @@ package ListType;
 
 import Interface_from.List;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.NoSuchElementException;
 
 public class SLinkedList<E> implements List<E>, Cloneable {
@@ -299,5 +301,20 @@ public class SLinkedList<E> implements List<E>, Cloneable {
             result[i++] = x.data;
         }
         return a;
+    }
+
+    public void sort(){
+        sort(null);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void sort(Comparator<? super E> c){
+        Object[] a = this.toArray();
+        Arrays.sort(a, (Comparator) c);
+
+        int i = 0;
+        for(Node<E> x = head; x != null; x = x.next, i++){
+            x.data = (E) a[i];
+        }
     }
 }

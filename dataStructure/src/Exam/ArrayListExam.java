@@ -3,6 +3,10 @@ package Exam;
 import ListType.ArrayList;
 
 public class ArrayListExam {
+
+    /**
+     * clone 예제
+     */
     public void exam(){
         ArrayList<Integer> original = new ArrayList<>();
         original.add(10);
